@@ -50,7 +50,6 @@ for sentence in sentences:
         print("ner-multi-fast span")
         print(dir(span))
         print(f"start_position: {span.start_position}, end_position: {span.end_position}, tag: {span.tag}, text: {span.text}")
-        sents.entities.append({'start_pos ': span.start_position, 'end_pos': span.end_position, 'tag': span.tag, 'text': span.text})   
     print('--------------')
     print(sentence.tokens)
     for token in sentence.tokens:
@@ -75,11 +74,10 @@ async def read_item(input: Input | None = None):
         j = ""
         for sentence in sentences:
             j += sentence.to_tagged_string()
-            for span in sentence.get_spans('flair/upos-multi-fast'):
-                sents.pos.append({'start_pos ': span.start_position, 'end_pos': span.end_position, 'tag': span.tag, 'text': span.text})
-
             for span in sentence.get_spans('flair/ner-multi-fast'):
                 sents.entities.append({'start_pos ': span.start_position, 'end_pos': span.end_position, 'tag': span.tag, 'text': span.text})   
+            for token in sentence.tokens:
+                sents.pos.append({'start_pos ': token.start_position, 'end_pos': token.end_position, 'tag': token.tag, 'text': token.text})  
 
         return json.dumps(sents, cls=SentsEncoder)
     return "moin"
